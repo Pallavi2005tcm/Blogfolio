@@ -11,31 +11,30 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const { data } = await axios.post(
-      "/api/admin/login",
-      { email, password }
-    );
+    try {
+      const { data } = await axios.post(
+        "/api/admin/login",
+        { email, password }
+      );
 
-    if (data.success) {
-      setToken(data.token);
+      if (data.success) {
+        setToken(data.token);
+        // localStorage.setItem("token", data.token); // Handled by AppContext
 
-      localStorage.setItem("token", data.token);
+        toast.success("Login successful!");
+        navigate("/admin");
+      } else {
+        toast.error(data.message);
+      }
 
-      toast.success("Login successful!");
-      navigate("/admin");
-    } else {
-      toast.error(data.message);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || error.message
+      );
     }
-
-  } catch (error) {
-    toast.error(
-      error.response?.data?.message || error.message
-    );
-  }
-};
+  };
 
 
   return (

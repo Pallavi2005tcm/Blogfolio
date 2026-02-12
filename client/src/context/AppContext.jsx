@@ -2,7 +2,8 @@ import {
   useContext,
   createContext,
   useEffect,
-  useState
+  useState,
+  useLayoutEffect
 } from "react";
 
 import { useNavigate } from "react-router-dom";
@@ -17,7 +18,7 @@ export const AppProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const [blogs, setBlogs] = useState([]);
   const [input, setInput] = useState("");
 
@@ -36,20 +37,33 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  // 1. Initialize token from localStorage to avoid initial null state if possible
+  //    (However, if we keep useState(null), we must ensure we check storage on mount)
+  //    Simplest is to trust the effect to run on mount if we add it as dependency.
+  //    But to avoid flash, we can initialize state directly.
+
+  useLayoutEffect(() => {
+    if (token) {
+      // ✅ Set Axios default header so every request sends the token
+      axios.defaults.headers.common["authorization"] = token;
+      localStorage.setItem("token", token);
+    } else {
+      // ❌ Remove header if no token
+      delete axios.defaults.headers.common["authorization"];
+      localStorage.removeItem("token");
+    }
+  }, [token]);
+
   useEffect(() => {
-  // Load token from localStorage
-  const tokenFromStorage = localStorage.getItem("token");
+    // Check localStorage on mount if token is null (optional if we init state from storage)
+    const tokenFromStorage = localStorage.getItem("token");
+    if (tokenFromStorage && !token) {
+      setToken(tokenFromStorage);
+    }
 
-  if (tokenFromStorage) {
-    setToken(tokenFromStorage);
-
-    // ✅ Set Axios default header so every request sends the token
-    axios.defaults.headers.common["authorization"] = tokenFromStorage;
-  }
-
-  // Fetch blogs after setting token
-  fetchBlogs();
-}, []);
+    // Fetch blogs
+    fetchBlogs();
+  }, []);
 
 
   const value = {
