@@ -7,8 +7,10 @@ const Footer = () => {
       <div className='flex flex-col md:flex-row items-start justify-between gap-10 py-10 border-b boorder-gray-500/3 text-gray-500'>
         <div>
           <img src={assets.logo} alt='logo' className='w-32 sm:w-44'/>
-          <p className='max-w-[410px] mt-6'>Hello everybody i am pallavi singh i am here to say that yesterday was a very beautiful day as i handshaked
-         my crush chul lo jo mujhe tum kabhi kho na jau mae raat din</p>
+          <p className='max-w-[410px] mt-6'>BlogFolio is a modern MERN stack blogging platform designed to deliver
+      high-quality content with an interactive user experience. It enables readers
+      to explore insightful articles, engage through a moderated commenting system,
+      and ensures content quality through admin approval workflows. </p>
         </div>
         <div className='flex flex-wrap justify-between w-full md:w-[45%] gap-5'>
            {footer_data.map((section,index)=>(
