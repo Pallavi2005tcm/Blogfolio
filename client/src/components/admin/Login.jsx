@@ -7,8 +7,9 @@ const Login = () => {
   const { axios, setToken } = useAppContext();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("tonty@don.com");
+const [password, setPassword] = useState("tontydon");
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
